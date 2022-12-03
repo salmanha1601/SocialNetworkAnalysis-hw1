@@ -1,8 +1,12 @@
 import pandas as pd
+import numpy as np
 
 inNodes = {}
 outNodes = {}
 wightsEdges = {}
+node_name_to_number = {} #dictionary - put an existing nodes name and gets it relevant number
+page_rank_arr =[]
+
 
 '''
 @input: path of the csv file 
@@ -26,20 +30,68 @@ def load_graph(path):
 
 
 
-def calculate_page_rank(β, δ, maxIterations):
-    pass
+def calculate_page_rank(β=0.85, δ=0.001, maxIterations=20):
+    global page_rank_arr
+    index = 0
+    for name in outNodes.keys():
+        node_name_to_number[name] = index
+        index = index+1
+    for name in inNodes.keys():
+        if name not in node_name_to_number:
+            node_name_to_number[name] = index
+            index = index + 1
+
+    init_arr = []
+    k =len(node_name_to_number.keys())
+    for i in range(0, k):
+        init_arr.append(1.0/k)
+    r0 = np.array(init_arr)#first initial vector
+
+    matrix = np.zeros((k, k),dtype= float) #initializes a 0 matrix
+    for s in outNodes.keys():
+        arr = np.zeros(k)
+        sn = node_name_to_number[s]
+        total_weight = 0
+        target_nodes = outNodes[s]
+        for t in target_nodes:
+            tn = node_name_to_number[t]
+            w = wightsEdges[(s,t)]
+            total_weight = total_weight + w
+            arr[tn] = w
+        arr = arr / total_weight
+        matrix[:,sn] = arr
+    i=0
+
+    while i < maxIterations:
+        r0 = β*np.matmul(matrix, r0)
+        trash = (1 - np.sum(r0)) / k
+        r0= r0 + trash
+        i = i +1
+    page_rank_arr = r0.tolist()
+
+
 
 
 def get_PageRank(node_name):
-    pass
-
+    if node_name in node_name_to_number:
+        key = node_name_to_number[node_name]
+        return page_rank_arr[key]
+    return -1
 
 def get_top_PageRank(n):
     pass
 
 
 def get_all_PageRank():
-    pass
+    list = []
+    for name in node_name_to_number.keys():
+        key = node_name_to_number[name]
+        page_rank_arr[key]
+        list.append((name, page_rank_arr[key]))
+    return list
 
 
-load_graph(r'C:\Users\Salman\Desktop\Folders\תואר\שנה ד\סמסטר א\ניתוח רשתות חברתיות\עבודות\soc-sign-bitcoinotc.csv')
+
+load_graph(r'C:\Users\zarfa\OneDrive\Desktop\soc-sign-bitcoinotc (1).csv')
+calculate_page_rank()
+print(get_all_PageRank())
