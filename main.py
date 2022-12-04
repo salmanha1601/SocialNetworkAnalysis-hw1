@@ -32,11 +32,13 @@ def load_graph(path):
             wightsEdges[(df['Source'][i], df['Target'][i])] = 1
 
 
+#input: beta, epsilon , maxiteraion
 #calculates each nodes page rank
 #page_rank_arr is an array which will hold all the page ranks
 #node_name_to_number is a dictionary which sorts a node name to the right index of the page_rank_arr
 #this algorithm uses a static matrix which gives us the page rank of the new iteration after we mulitply it
 #by the vector (array) of the page rank of the previous iteration and use beta.
+#we will do this untill we get to mac iteration or untill the abs(current iteration - prev iteation) < epsilon 
 #its column i on the matrix shows how node i affects other nodes (weight to j / total weights out of i)
 def calculate_page_rank(β=0.85, δ=0.001, maxIterations=20):
     global page_rank_arr
