@@ -78,15 +78,23 @@ def get_PageRank(node_name):
         return page_rank_arr[key]
     return -1
 
+# take second element for sort
+def takeSecond(elem):
+    return elem[1]
+
 def get_top_PageRank(n):
-    pass
+    list_n =[]
+    list = get_all_PageRank()
+    list.sort(key=takeSecond, reverse=True)
+    for i in range(n):
+        list_n.append(list[i])
+    return list_n
 
 
 def get_all_PageRank():
     list = []
     for name in node_name_to_number.keys():
         key = node_name_to_number[name]
-        page_rank_arr[key]
         list.append((name, page_rank_arr[key]))
     return list
 
@@ -95,3 +103,4 @@ def get_all_PageRank():
 load_graph(r'C:\Users\zarfa\OneDrive\Desktop\soc-sign-bitcoinotc (1).csv')
 calculate_page_rank()
 print(get_all_PageRank())
+print(get_top_PageRank(2))
