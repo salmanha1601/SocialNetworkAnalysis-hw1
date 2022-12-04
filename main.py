@@ -42,7 +42,7 @@ def calculate_page_rank(β=0.85, δ=0.001, maxIterations=20):
             index = index + 1
 
     init_arr = []
-    k =len(node_name_to_number.keys())
+    k = len(node_name_to_number.keys())
     for i in range(0, k):
         init_arr.append(1.0/k)
     r0 = np.array(init_arr)#first initial vector
@@ -60,15 +60,24 @@ def calculate_page_rank(β=0.85, δ=0.001, maxIterations=20):
             arr[tn] = w
         arr = arr / total_weight
         matrix[:,sn] = arr
-    i=0
 
+    i = 0
     while i < maxIterations:
+        prev = r0
+        print(i)
+        print(prev)
         r0 = β*np.matmul(matrix, r0)
         trash = (1 - np.sum(r0)) / k
-        r0= r0 + trash
-        i = i +1
+        r0 = r0 + trash
+        i = i + 1
+        prev = np.absolute(prev - r0)
+        is_less_than_epsilon = False
+        for x in prev:
+            if x < δ:
+                is_less_than_epsilon = True
+        if is_less_than_epsilon:
+            break
     page_rank_arr = r0.tolist()
-
 
 
 
@@ -83,12 +92,14 @@ def takeSecond(elem):
     return elem[1]
 
 def get_top_PageRank(n):
-    list_n =[]
-    list = get_all_PageRank()
-    list.sort(key=takeSecond, reverse=True)
-    for i in range(n):
-        list_n.append(list[i])
-    return list_n
+    lst=[]
+    for name in node_name_to_number.keys():
+        key = node_name_to_number[name]
+        page_rank_arr[key]
+        lst.append((name, page_rank_arr[key]))
+    lst.sort(key=lambda a: a[1],reverse = True)
+    return lst[:n]
+
 
 
 def get_all_PageRank():
@@ -100,7 +111,12 @@ def get_all_PageRank():
 
 
 
-load_graph(r'C:\Users\zarfa\OneDrive\Desktop\soc-sign-bitcoinotc (1).csv')
+load_graph(r'C:\Users\Salman\Desktop\Folders\תואר\שנה ד\סמסטר א\ניתוח רשתות חברתיות\עבודות\soc-sign-bitcoinotc.csv')
 calculate_page_rank()
+<<<<<<< HEAD
 print(get_all_PageRank())
 print(get_top_PageRank(2))
+=======
+print(get_top_PageRank(10))
+#print(get_all_PageRank())
+>>>>>>> 3d91e494c7844ea8333d1b63f44a3924c39fe031
