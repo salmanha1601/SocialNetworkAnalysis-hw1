@@ -79,7 +79,13 @@ def get_PageRank(node_name):
     return -1
 
 def get_top_PageRank(n):
-    pass
+    lst=[]
+    for name in node_name_to_number.keys():
+        key = node_name_to_number[name]
+        page_rank_arr[key]
+        lst.append((name, page_rank_arr[key]))
+    lst.sort(key=lambda a: a[1],reverse = True)
+    return lst[:n]
 
 
 def get_all_PageRank():
@@ -92,6 +98,7 @@ def get_all_PageRank():
 
 
 
-load_graph(r'C:\Users\zarfa\OneDrive\Desktop\soc-sign-bitcoinotc (1).csv')
+load_graph(r'C:\Users\Salman\Desktop\Folders\תואר\שנה ד\סמסטר א\ניתוח רשתות חברתיות\עבודות\soc-sign-bitcoinotc.csv')
 calculate_page_rank()
-print(get_all_PageRank())
+print(get_top_PageRank(10))
+#print(get_all_PageRank())
