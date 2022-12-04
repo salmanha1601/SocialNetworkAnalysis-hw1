@@ -14,7 +14,7 @@ page_rank_arr =[]
 we declare 3 dictionary:
 the inNodes dictionary- the key is Target node and at the value is a list of Source nodes 
 the outNodes dictionary- the key is Source node and at the value is a list of Target nodes 
-the wightsEdges dictionary- the key is tuple of (Source Node,Target Node) and at the value the wight of the edge between the 2 nodes
+the wightsEdges dictionary- the key is tuple of (Source Node,Target Node) and at the value the wight of the edge between the 2 nodes if the wight dosnt exist we set the wight to be 1.
 '''
 def load_graph(path):
     df = pd.read_csv(path)
@@ -26,7 +26,10 @@ def load_graph(path):
             inNodes[df['Target'][i]] = []
         outNodes[df['Source'][i]].append(df['Target'][i])
         inNodes[df['Target'][i]].append(df['Source'][i])
-        wightsEdges[(df['Source'][i], df['Target'][i])] = df['Weight'][i]
+        if 'Weight' in df.columns:
+            wightsEdges[(df['Source'][i], df['Target'][i])] = df['Weight'][i]
+        else:
+            wightsEdges[(df['Source'][i], df['Target'][i])] = 1
 
 
 #calculates each nodes page rank
@@ -69,8 +72,6 @@ def calculate_page_rank(β=0.85, δ=0.001, maxIterations=20):
     i = 0
     while i < maxIterations:
         prev = r0
-        print(i)
-        print(prev)
         r0 = β*np.matmul(matrix, r0)
         trash = (1 - np.sum(r0)) / k
         r0 = r0 + trash
@@ -85,17 +86,24 @@ def calculate_page_rank(β=0.85, δ=0.001, maxIterations=20):
     page_rank_arr = r0.tolist()
 
 
-
+'''
+@:input: str node name
+@:output: return the page rank for specific node by his name
+'''
 def get_PageRank(node_name):
     if node_name in node_name_to_number:
         key = node_name_to_number[node_name]
         return page_rank_arr[key]
     return -1
 
-# take second element for sort
+# take second element for sort- help function
 def takeSecond(elem):
     return elem[1]
 
+'''
+@:input: int n
+@:output: list of tuples for the top n page ranks after the calculation, each tuple include (nodeID, PageRaank)
+'''
 def get_top_PageRank(n):
     lst=[]
     for name in node_name_to_number.keys():
@@ -106,7 +114,10 @@ def get_top_PageRank(n):
     return lst[:n]
 
 
-
+'''
+@:input: None
+@:output: list of tuples each tuple include (nodeID, PageRaank)
+'''
 def get_all_PageRank():
     list = []
     for name in node_name_to_number.keys():
@@ -118,10 +129,8 @@ def get_all_PageRank():
 
 load_graph(r'C:\Users\Salman\Desktop\Folders\תואר\שנה ד\סמסטר א\ניתוח רשתות חברתיות\עבודות\soc-sign-bitcoinotc.csv')
 calculate_page_rank()
-<<<<<<< HEAD
-print(get_all_PageRank())
-print(get_top_PageRank(2))
-=======
-print(get_top_PageRank(10))
+newlst=get_top_PageRank(10)
+for i in range(0,len(newlst)):
+    print(i+1,': ',newlst[i])
 #print(get_all_PageRank())
->>>>>>> 3d91e494c7844ea8333d1b63f44a3924c39fe031
+
