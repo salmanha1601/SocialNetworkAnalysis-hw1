@@ -71,7 +71,6 @@ def calculate_page_rank(β=0.85, δ=0.001, maxIterations=20):
 
 
 
-
 def get_PageRank(node_name):
     if node_name in node_name_to_number:
         key = node_name_to_number[node_name]
