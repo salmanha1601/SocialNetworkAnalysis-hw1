@@ -14,7 +14,7 @@ page_rank_arr =[]
 we declare 3 dictionary:
 the inNodes dictionary- the key is Target node and at the value is a list of Source nodes 
 the outNodes dictionary- the key is Source node and at the value is a list of Target nodes 
-the wightsEdges dictionary- the key is tuple of (Source Node,Target Node) and at the value the wight of the edge between the 2 nodes
+the wightsEdges dictionary- the key is tuple of (Source Node,Target Node) and at the value the wight of the edge between the 2 nodes if the wight dosnt exist we set the wight to be 1.
 '''
 def load_graph(path):
     df = pd.read_csv(path)
@@ -26,7 +26,10 @@ def load_graph(path):
             inNodes[df['Target'][i]] = []
         outNodes[df['Source'][i]].append(df['Target'][i])
         inNodes[df['Target'][i]].append(df['Source'][i])
-        wightsEdges[(df['Source'][i], df['Target'][i])] = df['Weight'][i]
+        if 'Weight' in df.columns:
+            wightsEdges[(df['Source'][i], df['Target'][i])] = df['Weight'][i]
+        else:
+            wightsEdges[(df['Source'][i], df['Target'][i])] = 1
 
 
 
